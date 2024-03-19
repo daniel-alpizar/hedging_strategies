@@ -1,27 +1,33 @@
 # Financial Engineering: Hedging Strategies
 
+This repository contains a Python implementation and an R Markdown report on financial engineering techniques focusing on options hedging strategies. It explores several hedging approaches using Greek parameters to mitigate risks associated with options positions.
+
 ## Overview
-This project delves into the sophisticated world of financial engineering, with a keen focus on hedging strategies. It aims to elucidate various hedging techniques, leveraging options trading, and the application of Greek parameters in risk management. This work provides both theoretical frameworks and practical examples, employing real-world data to illustrate key concepts.
 
-## Contents
-- **Hedging**: Introduction to hedging and its significance in financial risk management.
-- **Hedging Options Positions**: Strategies for effective hedging in options trading.
-- **Greek Parameters**: Exploration of Delta, Gamma, Vega, and their roles in options trading.
-- **Delta Hedging**: In-depth look at Delta hedging techniques.
-- **Example with Real Data**: Practical application of hedging strategies using real market data.
-- **Delta-Gamma Hedging & Delta-Vega Hedging**: Advanced hedging strategies considering the option's sensitivity to the underlying asset's price and volatility.
-- **Applications of Hedging with Options**: Broader applications and implications of hedging strategies in financial markets.
-- **References**: A comprehensive list of references and sources.
+The project demonstrates the use of Delta, Gamma, Vega, and other Greeks to develop hedging strategies that minimize the risk exposure of options positions. Through practical examples, including a case study with Nvidia Corporation's stock, it offers insights into Delta Hedging, Delta-Gamma Hedging, and Delta-Vega Hedging strategies.
 
-## How to Use
-This project is presented as an R Markdown document. To run and explore the analyses:
-1. Ensure you have R and RStudio installed.
-2. Clone this repository to your local machine.
-3. Open `Project.Rmd` in RStudio.
-4. Install required R packages mentioned in the setup section of the document.
-5. Run the document to compile it into a PDF file, which includes all analyses and outputs.
+## Repository Contents
 
-## Dependencies
+- `financial_engeneering_hedging_strategies.py`: A Python script that implements various options hedging strategies using the Black-Scholes model. It calculates the necessary positions in the underlying asset and other options to achieve Delta neutrality, Delta-Gamma neutrality, and Delta-Vega neutrality.
+- `financial_engeneering_hedging_strategies.rmd`: A detailed report that knits the output from the R markdown analysis, including theoretical background on hedging strategies, explanation of Greek parameters, and examples with real data.
+
+## Features
+
+- Implementation of the Black-Scholes model for options pricing.
+- Calculation of Greek parameters: Delta, Gamma, Vega, Theta, and Rho.
+- Strategies to achieve Delta-neutral, Delta-Gamma-neutral, and Delta-Vega-neutral portfolios.
+- Example with real data demonstrating the application of these strategies.
+
+## Getting Started
+
+To run the Python script, ensure you have Python installed on your system along with the required libraries:
+- NumPy
+- Pandas
+- Matplotlib
+- Seaborn
+- SciPy
+
+To run the R markdown script, ensure you have installed:
 - R (Version 4.3.1 or higher)
 - RStudio (Recommended for ease of use)
 - Specific R packages: `knitr`, `ggplot2`
