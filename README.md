@@ -34,3 +34,5 @@ To run the R markdown script, ensure you have installed:
 
 ## Contact
 For any queries or further information, please contact [@daniel-alpizar](https://github.com/daniel-alpizar).
+
+![Hedging_Strategies](portfolio_performance.png)
