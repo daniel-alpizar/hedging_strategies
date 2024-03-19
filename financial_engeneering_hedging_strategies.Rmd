@@ -1,0 +1,289 @@
+---
+title: "Financial Engineering"
+author: "Daniel Alpizar\n\nUCID: 30221752"
+date: "2024-02-20"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Hedging
+
+To hedge is to minimize the risk of adverse price fluctuations in one asset by taking a contrary position in another asset with an opposing price movement. A common hedging strategy involves adopting an inversely correlated security or a derivative linked to the original asset. Derivatives are effective protection from price fluctuations because their values are directly related to the underlying asset.
+
+## Hedging options positions
+
+Option sellers face significant risk based on underlying asset price movements. If they choose to do nothing, known as a naked position, the premium earned can easily be outweighed by a loss if the option expires in-the-money, at which point the seller is obligated to purchase or sell the underlying asset at the strike price. Theoretically, the loss for the writer of a call option may be unlimited, while in the case of put option is limited but can be significant.
+
+Alternatively, adopting a covered position, where the seller immediately buys (for calls) or sells (for puts) the underlying asset, can be effective upon exercise. However, if the option expires out-of-the-money, the losses incurred in the underlying asset can be significantly greater than the premium earned on the option.
+
+Neither of these strategies provides an effective hedge against adverse directional price movements since both fail to eliminate or at least reduce the risk of the short option portfolio. Traders normally use more sophisticated hedging strategies that involve measuring and managing the sensitivity of a portfolio with respect to various factors determining its value, including the Greek parameters.
+
+The risk profile for an European option writer can be summarized by $C^Ee^{rT}-(S(T)-X)^+$ for the call option and $P^Ee^{rT}-(X-S(T))^+$ for the put option, where $C^Ee^{rT}$ and $P^Ee^{rT}$ are the values at the exercise time $T$ of the premium collected for the option, $S(T)$ is the stock price at time T, $X$ is the strike price of the option and $^{+}$ represents the payoff function.
+
+
+## Greek Parameters
+
+**Delta ($\Delta$):** measures the rate of change of the option’s price with respect to changes in the price of the underlying asset. It also tells us the number of units of the underlying asset we would need to hold for each option sold to balance out our risk.
+
+**Gamma ($\Gamma$):** Measures the rate of change in Delta with respect to changes in the underlying asset's price. This shows how the delta of an option changes as the underlying price moves.
+
+**Theta ($\Theta$):** Measures the rate of change of the option's price with respect to the passage of time, reflecting the time decay of the option's value.
+
+**Vega ($v$):** Measures the sensitivity of the option's price to changes in the volatility of the underlying asset. It indicates how much the option's price is expected to change per one percentage point change in implied volatility.
+
+**Rho ($P$):** Measures the sensitivity of the option's price to changes in the risk-free interest rate, indicating how much the option's price is expected to change per one percentage point change in interest rates.
+
+Consider a portfolio $V$ that includes $x$ units of stock with price $S$, $y$ bonds of price $A=1$ and $z$ units of a hedged derivative $D(S)$. Its value is determined by
+$$V(S) = xS +y +zD(S)$$
+When the option is issued, its strike price ($X$) and expiration date ($T$) are established and remain fixed. Thus, the key variables to analyze for understanding the option's behavior are the price of the underlying asset ($S$), the time remaining until expiration ($t$), the risk-free interest rate ($r$), and the volatility ($\sigma$) of the underlying asset. For this portfolio $V(S,t,\sigma,r)$, the Greeks are determined by the following derivatives:
+
+$$\text{delta}_V = \displaystyle \frac{\partial V}{\partial S},$$
+
+$$\text{gamma}_V = \displaystyle \frac{\partial^2 V}{\partial S},$$
+
+$$\text{theta}_V = \displaystyle \frac{\partial V}{\partial t},$$
+
+$$\text{vega}_V = \displaystyle \frac{\partial V}{\partial \sigma},$$
+
+$$\text{rho}_V = \displaystyle \frac{\partial V}{\partial r}$$
+For small changes in the variables (denoted by $\Delta S$, $\Delta t$, $\Delta \sigma$, $\Delta r$), we have the following approximate equality (by the Taylor formula):
+
+$$
+\Delta V \approx \text{delta}_V \times \Delta S + \text{theta}_V \times \Delta t + \text{vega}_V \times \Delta \sigma + \text{rho}_V \times \Delta r + \frac{1}{2} \text{gamma}_V \times (\Delta S)^2
+$$
+
+Therefore, one way to immunize a portfolio against small changes in a particular variable is to ensure the corresponding Greek parameter is equal to zero. For instance, to hedge against changes in the stock price, we should construct a delta-neutral portfolio. To combine the benefits of hedging against both changes in the stock price and volatility changes, we can build a portfolio with delta and vega equal to zero (delta-vega neutral). A delta-gamma neutral portfolio will be immune against larger changes in the stock price.
+
+The Black–Scholes formula allows us to compute the derivatives explicitly for a single option.
+
+\newpage
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{lcc}
+\hline
+Greek letter & Call option & Put option \\
+\hline \\
+Price & \( S_0 N(d_1) - Xe^{-rT} N(d_2) \) & \( Xe^{-rT} N(-d_2) - S_0e^{-qT} N(-d_1) \) \\ \\
+Delta & \( e^{-qT} N(d_1) \) & \( e^{-qT} [N(d_1) - 1] \) \\ \\
+Gamma & \( \frac{N'(d_1) e^{-qT}}{S_0 \sigma \sqrt{T}} \) & \( \frac{N'(d_1) e^{-qT}}{S_0 \sigma \sqrt{T}} \) \\ \\
+Theta & 
+\(\begin{aligned}
+&-S_0 N'(d_1)\sigma e^{-qT} / (2\sqrt{T}) \\
+&+ qS_0 N(d_1)e^{-qT} - rXe^{-rT} N(d_2)
+\end{aligned} \) & 
+\(\begin{aligned}
+&-S_0 N'(d_1)\sigma e^{-qT} / (2\sqrt{T}) \\
+&- qS_0 N(-d_1)e^{-qT} + rXe^{-rT} N(-d_2)
+\end{aligned} \) \\ \\
+Vega & \( S_0 \sqrt{T} N'(d_1) e^{-qT} \) & \( S_0 \sqrt{T} N'(d_1) e^{-qT} \) \\ \\
+Rho & \( X T e^{-rT} N(d_2) \) & \( -X T e^{-rT} N(-d_2) \) \\ \\
+\hline
+\end{tabular}
+\caption{Greek letters for European options on an asset that provides a yield at rate \( q \).}
+\label{tab:greeks}
+\end{table}
+
+where
+
+$q$ is the continuous dividend yield
+
+
+$N(x)$ is the cumulative distribution function (CDF) of the standard normal distribution
+
+$$d_1 = \frac{\ln\left(\frac{S(0)}{X}\right) + \left(r + \frac{1}{2}\sigma^2\right)T}{\sigma\sqrt{T}}, \quad d_2 = \frac{\ln\left(\frac{S(0)}{X}\right) + \left(r - \frac{1}{2}\sigma^2\right)T}{\sigma\sqrt{T}}$$
+
+
+## Delta Hedging
+
+In the context of a portfolio that includes selling a single derivative security (where $z=1$), the portfolio's value can be expressed as:
+
+$$
+V(S) = xS +y -D(S)
+$$
+where $x$ represents the number of units of the underlying asset, $y$ is the money market position, and $D(S)$ is the value of the derivative as a function of the underlying asset's price $S$. The change in the portfolio's value relative to changes in $S$ is captured by:
+
+$$
+\frac{dV(S)}{dS} = x - \frac{dD(S)}{dS}
+$$
+To maintain a delta-neutral position, where the portfolio's value is not affected by small movements in the stock price, we adjust $x$ (the position in the underlying stock) so that it offsets the derivative's delta ($\frac{dD(S)}{dS}$). By using the delta values calculated through the Black-Scholes model (as outlined in Table 1), we can ensure the portfolio $(x,y,z)$ is delta-neutral. This means any small fluctuation around the stock's initial price will have a negligible impact on the portfolio's value.
+
+It is advantageous to select the money market position $y$ such that the initial value of the portfolio is zero. This simplifies the management and calculation of the portfolio's performance over time.
+
+
+
+## Example with Real Data
+
+Consider a practical example using Nvidia Corporation's stock data as of the close on February 16, 2024. If an investor sold $100$ in-the-money call options with a strike price of $X=$700$ and a maturity date of November 15, 2024, the following parameters would be relevant: a stock price of $$726$, an implied volatility of $45.67%$, time to maturity of $T=0.7480$, and a 10-year Treasury rate of $4.30%$. Since the dividend yield is only $0.02\%$, it will be omitted for this example. Using the Black-Scholes formula, we find the option price and delta for these parameters, which allows us to construct a delta-neutral portfolio. This portfolio's goal is to minimize the impact of small price fluctuations on its overall value.
+
+
+$$
+C^E = 135.6072 \quad\quad \text{and} \quad\quad N(y1) = 0.64477
+$$
+
+The delta-neutral portfolio for this position is given by
+
+$$V(S) = N(d1)S + y - C^E(S)$$
+$$V(S) = 64.477 \times 726 - 33,250 - 100 \times 135.60 \approx 0$$
+
+We can evaluate the effectiveness of this portfolio in safeguarding against price volatility by simulating various potential stock prices for the next day, as illustrated in the table below:
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|r|r|}
+\hline
+\textbf{S} & \textbf{V} \quad\quad & \textbf{U} \quad\quad\\ \hline
+800 & -312.19 & -5,078.00 \\
+780 & -160.28 & -3,636.55 \\
+746 & -5.72 & -1,289.76 \\
+736 & 13.26 & -626.00 \\
+726 & 19.58 & 25.09 \\
+716 & 12.89 & 663.18 \\
+706 & -7.16 & 1,287.90 \\
+670 & -195.19 & 3,421.07 \\
+650 & -382.06 & 4,523.75 \\ \hline
+\end{tabular}
+\caption{Delta-Neutral vs. Unhedged Portfolio Performance Comparison.}
+\label{table:your_label}
+\end{table}
+
+
+
+## Delta-Gamma Hedging
+
+The delta-neutral portfolio effectively reduces exposure to minor fluctuations in the stock price, yet it does not offer robust protection against substantial price movements. To address this, it's essential to account for variations in delta in response to price changes and construct a delta-gamma neutral portfolio. Such a portfolio is designed to provide immunity against more significant shifts in the stock price.
+
+First, we must introduce a new asset into our portfolio, thereby providing a variable that can be adjusted to achieve a gamma of zero. To accomplish this, we will incorporate an additional call option on the same underlying stock. Consequently, our portfolio composition will evolve to include $(x, y, z, \widehat{z})$, with $\widehat{z}$ representing the position held in this new option.
+
+We select values for $x$ and $\tilde{z}$ to ensure that both the delta and gamma of the portfolio are zero,
+$$
+delta_V = x - z\text{ delta}_{C^E} + \tilde{z}\text{ delta}_{\widehat{C}^E} = 0,
+$$
+$$
+gamma_V = z \text{ gamma}_{C^E} + \widehat{z} \text{ gamma}_{\widehat{C}^E} = 0
+$$
+
+and we adjust the cash position $y$ to render the portfolio's net value equal to zero,
+$$
+V(S) = xS + y - z C^E(S) + \widehat{z}\widehat{C}^E(S) = 0
+$$
+
+For our example, we will incorporate another call with a strike price of $\$695$, set to expire on June 21, 2024, with the same implied volatility as the previous call option. The delta, gamma, and vega values for both our initial and the newly added options are presented in the table below:
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\textbf{option} & \textbf{time to expiry} & \textbf{strike price} & \textbf{option price} & \textbf{delta} & \textbf{gamma} & \textbf{vega} \\
+\hline
+original & 0.75 & 700 & 135.6072 & 0.64477 & 0.00130 & 233.8045 \\
+\hline
+additional & 0.35 & 695 & 97.6801 & 0.63762 & 0.00192 & 159.9425 \\
+\hline
+\end{tabular}
+\caption{Selected Greeks for original and additional call options}
+\label{table:options}
+\end{table}
+
+This gives the following system of equations:
+$$
+x - 64.4775 + 0.63762 \widehat{z} = 0,
+$$
+$$
+-0.12985 + 0.00192 \widehat{z} = 0,
+$$
+with solution $x \approx 21.46$ and $z \approx 67.47$. It follows that $y \approx -8,608.47$
+
+The values of the delta-gamma neutral portfolio are presented below, along with the results for the delta-neutral and unhedged positions.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|r|r|r|}
+\hline
+\textbf{S} & \textbf{delta-gamma} \quad\quad & \textbf{delta} \quad\quad & \textbf{unhedged} \quad\quad\\ \hline
+800 & -4.45 & -312.19 & -5,078.00 \\
+780 & -1.28 & -160.28 & -3,636.55 \\
+746 & 0.14 & -5.72 & -1,289.76 \\
+736 & 0.08 & 13.26 & -626.00 \\
+726 & -0.02 & 19.58 & 25.09 \\
+716 & -0.10 & 12.89 & 663.18 \\
+706 & -0.09 & -7.16 & 1,287.90 \\
+670 & 1.15 & -195.19 & 3,421.07 \\
+650 & 2.52 & -382.06 & 4,523.75 \\ \hline
+\end{tabular}
+\caption{Performance Comparison: Delta-Gamma Neutral, Delta-Neutral, and Unhedged Portfolios.}
+\label{table:your_label}
+\end{table}
+
+
+Our portfolio is now effectively immunized against significantly larger price fluctuations in the underlying stock, showing virtually no exposure to changes as substantial as plus or minus ten percent of the stock price. This starkly contrasts with the performance of both the delta-neutral and unhedged portfolios.
+
+
+## Delta-Vega Hedging
+
+Following a similar approach, we will now hedge against an increase in volatility, while retaining cover against small changes in the stock price. The conditions for our $(x, y, z, \widehat{z})$ portfolio are now the following:
+
+$$
+delta_V = x - z\text{ delta}_{C^E} + \tilde{z}\text{ delta}_{\widehat{C}^E} = 0,
+$$
+$$
+vega_V = z \text{ vega}_{C^E} + \widehat{z} \text{ vega}_{\widehat{C}^E} = 0
+$$
+Again, we select values for $x$ and $\tilde{z}$ to ensure that both the delta and vega of the portfolio are zero, leading to the following system of equations:
+
+$$
+x - 64.4775 + 0.63762 \widehat{z} = 0,
+$$
+$$
+23,380.45 + 159.943 \widehat{z} = 0,
+$$
+with solution $x \approx 18.02$ and $z \approx 73.11$. It follows that $y \approx -7,119.17$
+
+Now, assuming that the volatility increases to $\sigma=50\%$ on the following day. The performance of the delta-vega neutral portfolio is presented below, along with the results for the delta-neutral and unhedged positions.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|r|r|r|}
+\hline
+\textbf{S} & \textbf{delta-vega} \quad\quad & \textbf{delta} \quad\quad & \textbf{unhedged} \quad\quad\\ \hline
+800 & 290.94 & -282.02 & -5,057.95 \\
+780 & 142.18 & -142.90 & -3,626.54 \\
+746 & -5.42 & -1.65 & -1,288.40 \\
+736 & -21.14 & 15.66 & -624.95 \\
+726 & -23.34 & 21.40 & 26.93 \\
+716 & -11.56 & 15.28 & 666.95 \\
+706 & 14.67 & -3.02 & 1,294.79 \\
+670 & 235.04 & -174.38 & 3,449.54 \\
+650 & 446.72 & 344.58 & 4,571.62 \\ \hline
+\end{tabular}
+\caption{Performance Comparison: Delta-Vega Neutral, Delta-Neutral, and Unhedged Portfolios.}
+\label{table:your_label}
+\end{table}
+
+We can see how our portfolio protects against volatility fluctuations in the underlying stock. While its sensitivity is limited in situations where the stock price changes little or not at all, its performance weakens when the price experiences large variations. Nonetheless, the delta-vega hedged portfolio performs significantly better than both the delta-neutral and unhedged portfolios.
+
+
+## Applications of hedging with options
+
+**Custom Structured Products:** A financial institution might design structured products tailored to the specific need of clients. Given the non-standard nature of these products, they cannot be directly hedged through standardized options or futures contracts available on exchanges. Instead, the financial institution must carefully manage its exposure by constructing a custom hedging strategy.
+
+**Corporate Risk Management:** Companies with significant exposure to commodity prices, foreign exchange rates, or interest rates might use hedging strategies to manage their risk exposure. For example, an airline company might hedge its fuel costs by taking positions in the futures market that are delta-neutral relative to its expected fuel consumption. This way, the company can stabilize its fuel expenses despite fluctuations in oil prices.
+
+**Portfolio Risk Management:** A fund manager holding a diversified portfolio of options might use Delta-hedging to mitigate the risk of adverse price movements in the underlying assets. By dynamically adjusting the portfolio to maintain a delta-gamma neutral position, the manager can minimize the portfolio's sensitivity to price changes in the underlying assets.
+
+**Insurance Companies:** Insurance companies offer products like variable annuities that provide a retirement income based on the performance of investments chosen by the policyholder. These products often include features such as guarantees of minimum withdrawal benefits, death benefits, or income benefits that are sensitive to market conditions. By hedging against changes in the value of the underlying assets and the volatility of the market, insurers can ensure they have sufficient reserves to meet their obligations to policyholders, regardless of market conditions.
+
+
+## References
+
+1. Capinski, M., & Zastawniak, T. (2003). Mathematics for finance: An introduction to financial engineering. Springer.
+
+2. Hull, J. (2012). Options, futures, and other derivatives (8th edition). Prentice Hall.
+
+3. Passarelli, D. (2012). Trading options Greeks: How time, volatility, and other pricing factors drive profits (2nd ed.). Bloomberg Press.
+
+4. Nasdaq. (n.d.). NVIDIA Corporation (NVDA) Stock and Options information. Retrieved February 16, 2024, from https://www.nasdaq.com/market-activity/stocks/nvda
